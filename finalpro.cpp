@@ -9,8 +9,10 @@ typedef struct lotter *typelotter;
 
 typedef struct users *typeuser;
 
+typedef struct recap *typerecap;
 
 bool isload = false;
+int totalData = 0;
 
 struct lotter {
     typeinfo luckNumber;
@@ -25,8 +27,19 @@ struct users{
     typeuser next, prev;
 };
 
+struct recap{
+    typeinfo numberLotter;
+    typeinfo numberAnswer;
+    char name[30];
+    char nim[20];
+    char status[10];
+
+    typerecap next;
+};
+
 typelotter top, bottom;
 typeuser front, back;
+typerecap head;
 
 bool isStack(){
     if(top==NULL){
@@ -39,6 +52,14 @@ bool isStack(){
 bool isQueue(){
     if(front==NULL){
         return false; 
+    }else{
+        return true;
+    }
+}
+
+bool isCircle(){
+    if(head->next==head){
+        return false;
     }else{
         return true;
     }
@@ -82,6 +103,9 @@ void nQueue();
 void addQueue(users add);
 void deQueue();
 void printQueue();
+
+void nCircle();
+void addCircle(typeuser add, int answer, bool isWin);
 
 void regist();
 void playLotter();
@@ -187,6 +211,10 @@ bool isAdmin(string user, string pass){
 void getData(){
     lotter lotterData;
     users userData;
+    recap recapData;
+    typeuser add;
+    int answer;
+    bool isWin;
 
     FILE *fp;
     fp = fopen("stack.dat", "r");
@@ -207,7 +235,111 @@ void getData(){
     
     fclose(fp);
 
+    fp = fopen("recap.dat", "r");
+    if(fp != NULL){
+        while(fread(&recapData, sizeof(recap), 1, fp)){
+            add->number = recapData.numberLotter;
+            answer = recapData.numberAnswer;
+
+            for(int i=0;i<30;i++){
+                add->name[i] = recapData.name[i];
+            }
+
+            for(int i=0;i<20;i++){
+                add->nim[i] = recapData.nim[i];
+            }
+
+            if(recapData.status[0]=='W'){
+                isWin = true;
+            }else{
+                isWin = false;
+            }
+
+            addCircle(add, answer, isWin);
+        }
+    }
+
     isload = true;
+}
+
+// Circle
+void nCircle(){
+    head = (recap*)malloc(sizeof(recap));
+    head->numberLotter = totalData;
+    head->next = head;
+}
+
+void addCircle(typeuser add, int answer, bool isWin){
+    typerecap NI, helper;
+    string s;
+    totalData++;
+
+    NI = (recap*)malloc(sizeof(recap));
+
+    //insert data recap
+    NI->numberLotter = add->number;
+    NI->numberAnswer = answer;
+
+    for(int i=0;i<30;i++){
+        NI->name[i] = add->name[i];
+    }
+
+    for(int i=0;i<20;i++){
+        NI->nim[i] = add->nim[i];
+    }
+
+    if(isWin){
+        s = "Win";
+    }else{
+        s = "Lose";
+    }
+    strcpy(NI->status, s.c_str());
+
+    NI->next=NULL;
+
+    if(isCircle()){
+        helper=head;
+
+        while(strcmp(helper->next->name, NI->name) < 0 && helper->next != head)
+            helper = helper->next;
+
+        if(helper->next!=head){
+            NI->next = helper->next;
+            helper->next = NI;
+        }else{
+            NI->next = head;
+            helper->next = NI;
+        }
+
+    }else{
+        NI->next = head;
+        head->next = NI;
+        totalData=1;
+        head->numberLotter=totalData;
+    }
+
+    if(isload){
+        recap input;
+        FILE *fp;
+
+        input.numberAnswer = NI->numberAnswer;
+        input.numberLotter = NI->numberLotter;
+        for(int i=0;i<30;i++){
+            input.name[i] = NI->name[i];
+        }
+
+        for(int i=0;i<20;i++){
+            input.nim[i] = NI->nim[i];
+        }
+
+        for(int i=0;i<10;i++){
+            input.status[i] = NI->status[i];
+        }
+
+        fp = fopen("recap.dat", "a");
+        fwrite(&input, sizeof(recap), 1, fp);
+        fclose(fp);
+    }
 }
 
 
