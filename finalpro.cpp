@@ -43,6 +43,20 @@ bool isQueue(){
     }
 }
 
+bool invalid(){
+    if(cin.fail()){
+
+        puts("\nWrong Input ");
+        cin.clear();
+        cin.ignore(1000,'\n');
+        puts("\nPlese Input Integer Only!");
+
+        return true;
+    }else{
+        return false;
+    }
+}
+
 bool isAdmin(string user, string pass);
 
 void nStack();
@@ -57,7 +71,8 @@ void printQueue();
 
 void getData();
 
-char choice;
+char loop;
+int choice;
 
 
 
@@ -69,7 +84,7 @@ int main(){
     nStack();
     getData();
 
-    while(choice != 'n' && choice !='N'){
+    while(loop != 'n' && loop !='N'){
         system("cls");
 
         puts("MENU");
@@ -77,46 +92,63 @@ int main(){
         puts("2. Print Stack");
         puts("3. Regis");
         puts("4. Cek Queue");
+        puts("5. Play lotter");
         printf("Choice : "); cin >> choice;
-
-        switch (choice)
-        {
-        case '1':
-            puts("=== ADMIN LOGIN ===");
-            cin.ignore();
-            printf("Username   : "); getline(cin, user);
-            printf("Password   : "); getline(cin, pass);
-            if(isAdmin(user, pass)){
-                puts("\n=== Login Success ===\n");
-                printf("How many number do you want input? : "); cin >> many;
-
-                for(int i=0;i<many;i++){
-                    printf("Input number %d : ", i+1); cin >> number;
-                    addStack(number);
+        if(!invalid()){
+            switch (choice)
+            {
+            case 1:
+                puts("=== ADMIN LOGIN ===");
+                cin.ignore();
+                printf("Username   : "); getline(cin, user);
+                printf("Password   : "); getline(cin, pass);
+                if(isAdmin(user, pass)){
+                    puts("\n=== Login Success ===\n");
+                    printf("How many number do you want input? : "); cin >> many;
+                    if(!invalid()){
+                        for(int i=0;i<many;i++){
+                            printf("Input number %d : ", i+1); cin >> number;
+                            if(invalid()){
+                                puts("   -- Input Failed");
+                                break;
+                            }else{
+                                addStack(number);
+                                puts("   -- Input Success\n");
+                            }
+                        }
+                    }
+                }else{
+                    puts("\nUsername / Password is wrong!");
                 }
+                break;
 
-                puts("\nInput Success");
-            }else{
-                puts("\nUsername / Password is wrong!");
+            case 2:
+                printStack();
+                break;
+            case 3:
+                regist();
+                break;
+
+            case 4:
+                printQueue();
+                break;
+
+            case 5:
+
+                break;
+            default:
+                if(cin.fail()){
+                    puts("\n\nWrong Inpu");
+                    cin.clear();
+                    cin.ignore(1000,'\n');
+                    puts("\nPlese Input Integer Only!");
+                }
+                break;
             }
-            break;
-
-        case '2':
-            printStack();
-            break;
-        case '3':
-            regist();
-            break;
-
-        case '4':
-            printQueue();
-            break;
-        default:
-        
-            break;
         }
+        
 
-        printf("\nBack to menu? (y/n) : "); cin >> choice;
+        printf("\nBack to menu? (y/n) : "); cin >> loop;
     }
 
     return 0;
