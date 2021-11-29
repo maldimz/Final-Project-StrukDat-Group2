@@ -96,6 +96,8 @@ int main(){
                 }
 
                 puts("\nInput Success");
+            }else{
+                puts("\nUsername / Password is wrong!");
             }
             break;
 
@@ -129,13 +131,23 @@ bool isAdmin(string user, string pass){
 }
 
 void getData(){
-    lotter data;
+    lotter lotterData;
+    users userData;
 
     FILE *fp;
     fp = fopen("stack.dat", "r");
     if(fp != NULL){
-        while(fread(&data, sizeof(lotter), 1, fp)){
-            addStack(data.luckNumber);
+        while(fread(&lotterData, sizeof(lotter), 1, fp)){
+            addStack(lotterData.luckNumber);
+        }
+    }
+    
+    fclose(fp);
+
+    fp = fopen("queue.dat", "r");
+    if(fp != NULL){
+        while(fread(&userData, sizeof(users), 1, fp)){
+            addQueue(userData);
         }
     }
     
@@ -184,8 +196,8 @@ void addStack(typeinfo add){
 }
 
 void deStack(){
-    typelotter del;
-
+    typelotter del, helper;
+    lotter input;
     if(isStack()){
         del = top;
         top=top->down;
@@ -198,7 +210,22 @@ void deStack(){
             free(bottom);
             nStack();
         }
-        
+
+        if(isload){
+            FILE *fp;
+            fp = fopen("stack.dat", "w");
+            helper=bottom;
+            if(fp!=NULL){
+                while(helper!=NULL){
+                    input.luckNumber = helper->luckNumber;
+                    fwrite(&input, sizeof(lotter), 1, fp);
+                    helper=helper->up;
+                }
+                
+            }
+
+            fclose(fp);
+        }
     }
 }
 
@@ -214,11 +241,15 @@ void nQueue(){
 
 void addQueue(users add){
     typeuser NI;
-
+    
     NI = (users*)malloc(sizeof(users));
 
-    NI->number = top->luckNumber;
-    
+    if(isload){
+        NI->number = top->luckNumber;
+    }else{
+        NI->number = add.number;
+    }
+
     for(int i=0;i<30;i++){
         NI->name[i] = add.name[i];
     }
@@ -235,7 +266,16 @@ void addQueue(users add){
         back->prev = NI;
         back = NI;
     }else{
-        puts("\nNO DATA");
+        front = NI;
+        back = NI;
+    }
+
+    if(isload){
+        add.number = top->luckNumber;
+        FILE *fp;
+        fp = fopen("queue.dat", "a");
+        fwrite(&add, sizeof(users), 1, fp);
+        fclose(fp);
     }
 }
 
@@ -257,8 +297,9 @@ void printStack(){
     if(isStack()){
         typelotter helper;
         helper=top;
+        puts("\n=== Lottre Number Stack ===");
         while(helper!=NULL){
-            printf("%d \n", helper->luckNumber);
+            printf("   %d \n", helper->luckNumber);
             helper=helper->down;
         }
     }else{
@@ -271,10 +312,10 @@ void printQueue(){
         int x=1;
         typeuser helper;
         helper = front;
+        puts("=== Queue Data ===\n");
+        printf("%-3s %-31s %-s\n","No","Name","NIM");
         while(helper!=NULL){
-            printf("Queue - %d\n", x++);
-            printf("Name   : %s\n", helper->name);
-            printf("NIM    : %s\n\n", helper->nim);
+            printf("%-3d %-31s %-s\n",x++, helper->name, helper->nim);
             helper = helper->prev;
         }
     }else{
