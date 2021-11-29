@@ -135,6 +135,7 @@ int main(){
         puts("3. Regis");
         puts("4. Cek Queue");
         puts("5. Play lotter");
+        puts("6. Recap Data");
         printf("Choice : "); cin >> choice;
         if(!invalid()){
             switch (choice)
@@ -179,6 +180,21 @@ int main(){
             case 5:
                 playLotter();
                 break;
+
+            case 6:
+                puts("=== ADMIN LOGIN ===");cin.ignore();
+
+                printf("Username   : "); getline(cin, user);
+                printf("Password   : "); getline(cin, pass);
+
+                if(isAdmin(user, pass)){
+                    puts("\n=== Login Success ===\n");
+                    puts("\n=== Recap Data ===");
+                }else{
+                    puts("\nUsername / Password is wrong!");
+                }
+                break;
+
             default:
                 if(cin.fail()){
                     puts("\n\nWrong Inpu");
