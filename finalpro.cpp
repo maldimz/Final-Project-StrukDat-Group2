@@ -1,5 +1,6 @@
 #include <iostream>
 #include <malloc.h>
+#include <cstring>
 
 using namespace std;
 
@@ -57,6 +58,19 @@ bool invalid(){
     }
 }
 
+bool isTrue(char *input, int max){
+    int size;
+    size = strlen(input);
+    if(size>=max){
+        printf(" --Max Allowed char is %d \n", max);
+        cin.clear();
+        fflush(stdin);
+        return false;
+    }else{
+        return true;
+    }
+}
+
 bool isAdmin(string user, string pass);
 
 void nStack();
@@ -66,8 +80,12 @@ void printStack();
 
 void nQueue();
 void addQueue(users add);
-void regist();
+void deQueue();
 void printQueue();
+
+void regist();
+void playLotter();
+
 
 void getData();
 
@@ -98,10 +116,11 @@ int main(){
             switch (choice)
             {
             case 1:
-                puts("=== ADMIN LOGIN ===");
-                cin.ignore();
+                puts("=== ADMIN LOGIN ===");cin.ignore();
+
                 printf("Username   : "); getline(cin, user);
                 printf("Password   : "); getline(cin, pass);
+
                 if(isAdmin(user, pass)){
                     puts("\n=== Login Success ===\n");
                     printf("How many number do you want input? : "); cin >> many;
@@ -154,6 +173,7 @@ int main(){
     return 0;
 }
 
+// Admin Login
 bool isAdmin(string user, string pass){
     if(user == "admin" && pass == "admin123"){
         return true;
@@ -162,6 +182,8 @@ bool isAdmin(string user, string pass){
     }
 }
 
+
+// Get ALL File Data
 void getData(){
     lotter lotterData;
     users userData;
@@ -188,6 +210,8 @@ void getData(){
     isload = true;
 }
 
+
+// Stack
 void nStack(){
     typelotter first;
 
@@ -261,6 +285,8 @@ void deStack(){
     }
 }
 
+
+// Queue
 void nQueue(){
     typeuser first;
 
@@ -311,20 +337,12 @@ void addQueue(users add){
     }
 }
 
-void regist(){
-    users input;
-    if(isStack()){
-        puts("=== REGISTRATION ==="); cin.ignore();
-        printf("Name    : "); cin.getline(input.name, 30);
-        printf("NIM     : "); cin.getline(input.nim, 20);
-        puts("Success, please get in the queue");
-        addQueue(input);
-        deStack();
-    }else{
-        puts("\n Sorry, our lottre is out of stock");
-    }
+void deQueue(){
+
 }
 
+
+// Print Data
 void printStack(){
     if(isStack()){
         typelotter helper;
@@ -353,4 +371,36 @@ void printQueue(){
     }else{
         puts("\nNO DATA");
     }
+}
+
+
+// Registration
+void regist(){
+    users input;
+    if(isStack()){
+        puts("=== REGISTRATION ==="); cin.ignore();
+        printf("Name    : "); cin.getline(input.name, 35);
+
+        if(isTrue(input.name, 30)){
+            printf("NIM     : "); cin.getline(input.nim, 30);
+
+            if(isTrue(input.nim, 20)){
+                puts("Success, please get in the queue");
+                addQueue(input);
+                deStack();
+            }else{
+                puts(" --Failed!");
+            }
+        }else{
+            puts(" --Failed!");
+        }
+        
+    }else{
+        puts("\n Sorry, our lottre is out of stock");
+    }
+}
+
+//Play Lotter
+void playLotter(){
+
 }
