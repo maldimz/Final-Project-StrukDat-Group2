@@ -153,7 +153,7 @@ int main(){
                 break;
 
             case 5:
-
+                playLotter();
                 break;
             default:
                 if(cin.fail()){
@@ -338,7 +338,37 @@ void addQueue(users add){
 }
 
 void deQueue(){
+    typeuser del, helper;
+    users input;
+    if(isQueue()){
+        del = front;
+        front=front->prev;
 
+        free(del);
+
+        if(isload){
+            FILE *fp;
+            fp = fopen("queue.dat", "w");
+            helper=front;
+            if(fp!=NULL){
+                while(helper!=NULL){
+                    input.number = helper->number;
+                    for(int i=0;i<30;i++){
+                        input.name[i] = helper->name[i];
+                    }
+
+                    for(int i=0;i<20;i++){
+                        input.nim[i] = helper->nim[i];
+                    }
+
+                    fwrite(&input, sizeof(users), 1, fp);
+                    helper=helper->prev;
+                }
+            }
+
+            fclose(fp);
+        }
+    }
 }
 
 
@@ -402,5 +432,6 @@ void regist(){
 
 //Play Lotter
 void playLotter(){
-
+    puts("Play Succes!");
+    deQueue();
 }
