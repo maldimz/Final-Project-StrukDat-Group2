@@ -43,6 +43,8 @@ bool isQueue(){
     }
 }
 
+bool isAdmin(string user, string pass);
+
 void nStack();
 void addStack(typeinfo add);
 void deStack();
@@ -61,6 +63,8 @@ char choice;
 
 int main(){
     typeinfo number;
+    int many;
+    string user, pass;
 
     nStack();
     getData();
@@ -78,8 +82,21 @@ int main(){
         switch (choice)
         {
         case '1':
-            printf("\n Input number : "); cin >> number;
-            addStack(number);
+            puts("=== ADMIN LOGIN ===");
+            cin.ignore();
+            printf("Username   : "); getline(cin, user);
+            printf("Password   : "); getline(cin, pass);
+            if(isAdmin(user, pass)){
+                puts("\n=== Login Success ===\n");
+                printf("How many number do you want input? : "); cin >> many;
+
+                for(int i=0;i<many;i++){
+                    printf("Input number %d : ", i+1); cin >> number;
+                    addStack(number);
+                }
+
+                puts("\nInput Success");
+            }
             break;
 
         case '2':
@@ -97,10 +114,18 @@ int main(){
             break;
         }
 
-        printf("Back to menu? (y/n) : "); cin >> choice;
+        printf("\nBack to menu? (y/n) : "); cin >> choice;
     }
 
     return 0;
+}
+
+bool isAdmin(string user, string pass){
+    if(user == "admin" && pass == "admin123"){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 void getData(){
