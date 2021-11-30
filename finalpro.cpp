@@ -212,6 +212,7 @@ int main(){
         
 
         printf("\nBack to menu? (y/n) : "); cin >> loop;
+        fflush(stdin);
     }
 
     return 0;
@@ -584,6 +585,8 @@ void printQueue(){
 
 // Registration
 void regist(){
+    int pay;
+    char loop_regis='y';
     users input;
     if(isStack()){
         puts("=== REGISTRATION ==="); cin.ignore();
@@ -593,9 +596,25 @@ void regist(){
             printf("NIM     : "); cin.getline(input.nim, 30);
 
             if(isTrue(input.nim, 20)){
-                puts("Success, please get in the queue");
-                addQueue(input);
-                deStack();
+                while(loop_regis != 'n' && loop_regis != 'N'){
+                    system("cls");
+                    puts("=== PAYMENT ===");
+                    puts("Ticket Price Rp. 100000");
+                    printf("Pay       : Rp. "); cin >> pay;
+
+                    if(!invalid()){
+                        if(pay >= 100000){
+                            printf("Change    : Rp. %d\n", pay-100000);
+                            puts("Success, please get in the queue");
+                            loop_regis='n';
+                            addQueue(input);
+                            deStack();
+                        }else{
+                            printf("Failed! Pay Again (y/n) ? "); cin >> loop_regis;
+                            fflush(stdin);
+                        }
+                    }
+                }        
             }else{
                 puts(" --Failed!");
             }

@@ -4,5 +4,6 @@
         "string": "cpp",
         "string_view": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }
