@@ -137,7 +137,7 @@ int main(){
         puts("2. Print Stack");
         puts("3. Regis");
         puts("4. Cek Queue");
-        puts("5. Play lotter");
+        puts("5. Play Lottery");
         puts("6. Recap Data");
         printf("Choice : "); cin >> choice;
         if(!invalid()){
@@ -371,7 +371,7 @@ void printCircle(){
 
     helper = head->next;
     if(isCircle()){
-        printf("%-3s %-30s %-20s %-15s %-15s %-s\n","No","Name","NIM","Lotter Number", "Guess Number", "Status");
+        printf("%-3s %-30s %-20s %-15s %-15s %-s\n","No","Name","NIM","Lottery Number", "Guess Number", "Status");
         while (helper != head){
             printf("%-3d %-30s %-20s %-15d %-15d %-s\n",i++,helper->name,helper->nim,helper->numberLotter, helper->numberAnswer, helper->status);
             helper = helper->next;
@@ -555,7 +555,7 @@ void printStack(){
     if(isStack()){
         typelotter helper;
         helper=top;
-        puts("\n=== Lottre Number Stack ===");
+        puts("\n=== Lottery Number Stack ===");
         while(helper!=NULL){
             printf("   %d \n", helper->luckNumber);
             helper=helper->down;
@@ -604,7 +604,7 @@ void regist(){
         }
         
     }else{
-        puts("\n Sorry, our lottre is out of stock");
+        puts("\n Sorry, our lottery is out of stock");
     }
 }
 
@@ -614,11 +614,11 @@ void playLotter(){
     bool isWin;
     if(isQueue()){
         system("cls");
-        puts("===== Welcome to Lotter Games =====");
+        puts("===== Welcome to Lottery Games =====");
         puts("  Rules : ");
         puts("   - Input the number ");
-        puts("   - If you're guess correct you win ");
-        puts("   - If you're guess wrong you loss ");
+        puts("   - If your guess correct you win ");
+        puts("   - If your guess wrong you loss ");
         printf("  Start . . .\n\n"); system("pause");
         puts("-----------------------------------");
 
