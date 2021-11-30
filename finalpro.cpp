@@ -106,6 +106,7 @@ void printQueue();
 
 void nCircle();
 void addCircle(typeuser add, int answer, bool isWin);
+void printCircle();
 
 void regist();
 void playLotter();
@@ -124,6 +125,8 @@ int main(){
     string user, pass;
 
     nStack();
+    nQueue();
+    nCircle();
     getData();
 
     while(loop != 'n' && loop !='N'){
@@ -190,6 +193,7 @@ int main(){
                 if(isAdmin(user, pass)){
                     puts("\n=== Login Success ===\n");
                     puts("\n=== Recap Data ===");
+                    printCircle();
                 }else{
                     puts("\nUsername / Password is wrong!");
                 }
@@ -229,6 +233,7 @@ void getData(){
     users userData;
     recap recapData;
     typeuser add;
+    add = (users*)malloc(sizeof(users));
     int answer;
     bool isWin;
 
@@ -274,7 +279,9 @@ void getData(){
             addCircle(add, answer, isWin);
         }
     }
+    fclose(fp);
 
+    free(add);
     isload = true;
 }
 
@@ -316,7 +323,7 @@ void addCircle(typeuser add, int answer, bool isWin){
     if(isCircle()){
         helper=head;
 
-        while(strcmp(helper->next->name, NI->name) < 0 && helper->next != head)
+        while((strcmp(helper->next->name, NI->name) < 0) && helper->next != head)
             helper = helper->next;
 
         if(helper->next!=head){
@@ -358,6 +365,22 @@ void addCircle(typeuser add, int answer, bool isWin){
     }
 }
 
+void printCircle(){
+    typerecap helper;
+    int i=1;
+
+    helper = head->next;
+    if(isCircle()){
+        printf("%-3s %-30s %-20s %-15s %-15s %-s\n","No","Name","NIM","Lotter Number", "Guess Number", "Status");
+        while (helper != head){
+            printf("%-3d %-30s %-20s %-15d %-15d %-s\n",i++,helper->name,helper->nim,helper->numberLotter, helper->numberAnswer, helper->status);
+            helper = helper->next;
+        }
+        
+    }else{
+        puts("\nNO DATA");
+    }
+}
 
 // Stack
 void nStack(){
@@ -410,8 +433,8 @@ void deStack(){
             top->up=NULL;
             free(del);
         }else{
+            free(del);
             free(top);
-            free(bottom);
             nStack();
         }
 
@@ -492,7 +515,14 @@ void deQueue(){
         del = front;
         front=front->prev;
 
-        free(del);
+        if(front!=NULL){
+            free(del);
+            front->next = NULL;
+        }else{
+            free(front); free(del);
+            nQueue();
+        }
+        
 
         if(isload){
             FILE *fp;
@@ -580,6 +610,34 @@ void regist(){
 
 //Play Lotter
 void playLotter(){
-    puts("Play Succes!");
-    deQueue();
+    int guess;
+    bool isWin;
+    if(isQueue()){
+        system("cls");
+        puts("===== Welcome to Lotter Games =====");
+        puts("  Rules : ");
+        puts("   - Input the number ");
+        puts("   - If you're guess correct you win ");
+        puts("   - If you're guess wrong you loss ");
+        printf("  Start . . .\n\n"); system("pause");
+        puts("-----------------------------------");
+
+        printf("Hello %s\n", front->name);
+        printf("Input your luck number : "); cin >> guess;
+        if(!invalid()){
+            if(guess == front->number){
+                puts("Congratulation! You win the game, and get free UKT ");
+                isWin=true;
+            }else{
+                puts("Sorry better luck next time!");
+                isWin=false;
+            }
+
+            addCircle(front, guess, isWin);
+            deQueue();
+        }
+    }else{
+        puts("\n  -- No Participant!");
+    }
+    
 }
