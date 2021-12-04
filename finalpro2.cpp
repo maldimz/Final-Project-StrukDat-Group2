@@ -290,13 +290,8 @@ void getData(){
             add->number = recapData.numberLotter;
             answer = recapData.numberAnswer;
 
-            for(int i=0;i<30;i++){
-                add->name[i] = recapData.name[i];
-            }
-
-            for(int i=0;i<20;i++){
-                add->nim[i] = recapData.nim[i];
-            }
+            strncpy(add->name, recapData.name, 30);
+            strncpy(add->nim, recapData.nim, 20);
 
             if(recapData.status[0]=='W'){
                 isWin = true;
@@ -331,13 +326,8 @@ void addCircle(typeuser add, int answer, bool isWin){
     NI->numberLotter = add->number;
     NI->numberAnswer = answer;
 
-    for(int i=0;i<30;i++){
-        NI->name[i] = add->name[i];
-    }
-
-    for(int i=0;i<20;i++){
-        NI->nim[i] = add->nim[i];
-    }
+    strncpy(NI->name, add->name, 30);
+    strncpy(NI->nim, add->nim, 20);
 
     if(isWin){
         s = "Win";
@@ -375,17 +365,10 @@ void addCircle(typeuser add, int answer, bool isWin){
 
         input.numberAnswer = NI->numberAnswer;
         input.numberLotter = NI->numberLotter;
-        for(int i=0;i<30;i++){
-            input.name[i] = NI->name[i];
-        }
 
-        for(int i=0;i<20;i++){
-            input.nim[i] = NI->nim[i];
-        }
-
-        for(int i=0;i<10;i++){
-            input.status[i] = NI->status[i];
-        }
+        strncpy(input.name, NI->name, 30);
+        strncpy(input.nim, NI->nim, 20);
+        strncpy(input.status, NI->status, 10);
 
         fp = fopen("recap.dat", "a");
         fwrite(&input, sizeof(recap), 1, fp);
@@ -507,13 +490,8 @@ void addQueue(users add){
         NI->number = add.number;
     }
 
-    for(int i=0;i<30;i++){
-        NI->name[i] = add.name[i];
-    }
-
-    for(int i=0;i<20;i++){
-        NI->nim[i] = add.nim[i];
-    }
+    strncpy(NI->name, add.name, 30);
+    strncpy(NI->nim, add.nim, 20);
 
     NI->next = NULL;
 
@@ -558,13 +536,9 @@ void deQueue(){
             if(fp!=NULL){
                 while(helper!=NULL){
                     input.number = helper->number;
-                    for(int i=0;i<30;i++){
-                        input.name[i] = helper->name[i];
-                    }
 
-                    for(int i=0;i<20;i++){
-                        input.nim[i] = helper->nim[i];
-                    }
+                    strncpy(input.name, helper->name, 30);
+                    strncpy(input.nim, helper->nim, 20);
 
                     fwrite(&input, sizeof(users), 1, fp);
                     helper=helper->next;
@@ -716,13 +690,9 @@ void cancelRegistration(){
                 if(fp!=NULL){
                     while(helper!=NULL){
                         input.number = helper->number;
-                        for(int i=0;i<30;i++){
-                            input.name[i] = helper->name[i];
-                        }
 
-                        for(int i=0;i<20;i++){
-                            input.nim[i] = helper->nim[i];
-                        }
+                        strncpy(input.name, helper->name, 30);
+                        strncpy(input.nim, helper->nim, 20);
 
                         fwrite(&input, sizeof(users), 1, fp);
                         helper=helper->next;
