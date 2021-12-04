@@ -132,15 +132,16 @@ int main(){
 
     while(loop != 'n' && loop !='N'){
         system("cls");
-
-        puts("         MENU         ");
-        puts("1. Admin Menu");
-        puts("2. Registration");
-        puts("3. Cek Queue");
-        puts("4. Play Lottery");
-        puts("5. Cancel Registration");
-        puts("6. Exit");
-        printf("Choice : "); cin >> choice;
+        
+        puts("======  FP LOTTERY  ======");
+        puts(" MENU : ");
+        puts(" 1. Admin Menu");
+        puts(" 2. Registration");
+        puts(" 3. Cek Queue");
+        puts(" 4. Play Lottery");
+        puts(" 5. Cancel Registration");
+        puts(" 6. Exit");
+        printf(" Choice : "); cin >> choice;
         if(!invalid()){
             switch (choice)
             {
