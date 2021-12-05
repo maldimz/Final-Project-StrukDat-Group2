@@ -4,14 +4,21 @@
 
 using namespace std;
 
+// typeinfo is an int
 typedef int typeinfo;
+
+//pointer declaration for struct
 typedef struct lotter *typelotter;
 
 typedef struct users *typeuser;
 
 typedef struct recap *typerecap;
 
+
+//status file is load at the first time program running
 bool isload = false;
+
+//declaration total data on circle linkedlist
 int totalData = 0;
 
 struct lotter {
@@ -37,10 +44,17 @@ struct recap{
     typerecap next;
 };
 
+//declaration for stack top and bottom
 typelotter top, bottom;
+
+//declaration for queue front and back
 typeuser front, back;
+
+//declaration head an circle linkedlist
 typerecap head;
 
+
+//checking is the stack empty or not
 bool isStack(){
     if(top==NULL){
         return false;
@@ -49,6 +63,7 @@ bool isStack(){
     }
 }
 
+//checking is the queue empty or not
 bool isQueue(){
     if(front==NULL){
         return false; 
@@ -57,6 +72,7 @@ bool isQueue(){
     }
 }
 
+//checking is the circle Linkedlist empty or not
 bool isCircle(){
     if(head->next==head){
         return false;
@@ -65,6 +81,7 @@ bool isCircle(){
     }
 }
 
+//error handling if the input is not an integer
 bool invalid(){
     if(cin.fail()){
 
@@ -79,6 +96,7 @@ bool invalid(){
     }
 }
 
+//checking is the input character is not more than max
 bool isTrue(char *input, int max){
     int size;
     size = strlen(input);
@@ -125,21 +143,25 @@ int main(){
     int many;
     string user, pass;
 
+    //create all the linkedlist
     nStack();
     nQueue();
     nCircle();
+
+    //load the data in file
     getData();
 
     while(loop != 'n' && loop !='N'){
         system("cls");
         
+        //The program menu
         puts("======  FP LOTTERY  ======");
         puts(" MENU : ");
-        puts(" 1. Admin Menu");
-        puts(" 2. Registration");
-        puts(" 3. Cek Queue");
-        puts(" 4. Play Lottery");
-        puts(" 5. Cancel Registration");
+        puts(" 1. Admin Menu"); //Admin menu must login
+        puts(" 2. Registration"); //Registration if the stack not empty
+        puts(" 3. Cek Queue"); //checking queue after registration
+        puts(" 4. Play Lottery"); //play the lottery according to the queue and it will dequeue
+        puts(" 5. Cancel Registration"); //for canceling registration Lottery
         puts(" 6. Exit");
         printf(" Choice : "); cin >> choice;
         if(!invalid()){
@@ -166,10 +188,10 @@ int main(){
                         printf("Choice : "); cin >> choice;
                         if(!invalid()){
                             if(choice==1){
-                                printf("\nHow many number do you want input? : "); cin >> many;
+                                printf("\nHow many number do you want input? : "); cin >> many; //input data stack
                                 if(!invalid()){
                                     for(int i=0;i<many;i++){
-                                        printf("Input number %d : ", i+1); cin >> number;
+                                        printf("Input number %d : ", i+1); cin >> number; //if not error the input success
                                         if(invalid()){
                                             puts("   -- Input Failed");
                                             break;
@@ -219,14 +241,14 @@ int main(){
                 cancelRegistration();
                 break;
             
-            case 6:
+            case 6: //program exit
                 system("cls");
                 puts("\n\n      Program Exit! \n");
                 system("pause");
                 exit(0);
                 break;
 
-            default:
+            default: //error handling if the input not an integer
                 if(cin.fail()){
                     puts("\n\nWrong Inpu");
                     cin.clear();
@@ -239,13 +261,13 @@ int main(){
         
 
         printf("\nBack to menu? (y/n) : "); cin >> loop;
-        fflush(stdin);
+        fflush(stdin);//clear input char on keyboard
     }
 
     return 0;
 }
 
-// Admin Login
+// Admin Login check
 bool isAdmin(string user, string pass){
     if(user == "admin" && pass == "admin123"){
         return true;
@@ -266,7 +288,7 @@ void getData(){
     bool isWin;
 
     FILE *fp;
-    fp = fopen("stack.dat", "r");
+    fp = fopen("stack.dat", "r"); //read stack.dat
     if(fp != NULL){
         while(fread(&lotterData, sizeof(lotter), 1, fp)){
             addStack(lotterData.luckNumber);
@@ -275,7 +297,7 @@ void getData(){
     
     fclose(fp);
 
-    fp = fopen("queue.dat", "r");
+    fp = fopen("queue.dat", "r"); //read queue.dat
     if(fp != NULL){
         while(fread(&userData, sizeof(users), 1, fp)){
             addQueue(userData);
@@ -284,7 +306,7 @@ void getData(){
     
     fclose(fp);
 
-    fp = fopen("recap.dat", "r");
+    fp = fopen("recap.dat", "r"); //read recap.dat
     if(fp != NULL){
         while(fread(&recapData, sizeof(recap), 1, fp)){
             add->number = recapData.numberLotter;
@@ -308,14 +330,15 @@ void getData(){
     isload = true;
 }
 
-// Circle
+// Create Cicle Linkedlist
 void nCircle(){
     head = (recap*)malloc(sizeof(recap));
     head->numberLotter = totalData;
     head->next = head;
 }
 
-void addCircle(typeuser add, int answer, bool isWin){
+// Add node Cicle Linkedlist
+void addCircle(typeuser add, int answer, bool isWin){ //it use the users data, the answer, and win/lose
     typerecap NI, helper;
     string s;
     totalData++;
@@ -341,25 +364,25 @@ void addCircle(typeuser add, int answer, bool isWin){
     if(isCircle()){
         helper=head;
 
-        while((strcmp(helper->next->name, NI->name) < 0) && helper->next != head)
-            helper = helper->next;
+        while((strcmp(helper->next->name, NI->name) < 0) && helper->next != head) //to sort the data base on the name user
+            helper = helper->next; //the max loop until last data before head
 
-        if(helper->next!=head){
+        if(helper->next!=head){ //if the data in middle
             NI->next = helper->next;
             helper->next = NI;
-        }else{
+        }else{ //if the data on back
             NI->next = head;
             helper->next = NI;
         }
 
-    }else{
+    }else{ //if the circle empty
         NI->next = head;
         head->next = NI;
         totalData=1;
         head->numberLotter=totalData;
     }
 
-    if(isload){
+    if(isload){ //function to write file to save recap data after load the data at the first time
         recap input;
         FILE *fp;
 
@@ -375,7 +398,7 @@ void addCircle(typeuser add, int answer, bool isWin){
         fclose(fp);
     }
 }
-
+//print the data on circle linkedlist
 void printCircle(){
     typerecap helper;
     int i=1;
@@ -388,12 +411,12 @@ void printCircle(){
             helper = helper->next;
         }
         
-    }else{
+    }else{ //if empty
         puts("\nNO DATA");
     }
 }
 
-// Stack
+// Create New Stack
 void nStack(){
     typelotter first;
 
@@ -404,6 +427,7 @@ void nStack(){
     bottom = first;
 }
 
+// Add stack
 void addStack(typeinfo add){
     typelotter NI;
 
@@ -415,11 +439,11 @@ void addStack(typeinfo add){
     NI->down=NULL;
     NI->up=NULL;
 
-    if(isStack()){
+    if(isStack()){ //if the stack not empty
         NI->down = top;
         top->up = NI;
         top=NI;
-    }else{
+    }else{ //if empty
         top = NI;
         bottom = NI; 
     }
@@ -433,22 +457,24 @@ void addStack(typeinfo add){
     }
 }
 
+//Get top stack data
 void deStack(){
     typelotter del, helper;
     lotter input;
-    if(isStack()){
+    if(isStack()){//if not empty
         del = top;
-        top=top->down;
+        top=top->down; //make top into the bottom of the top
 
         if(top!=NULL){
             top->up=NULL;
             free(del);
-        }else{
+        }else{ //if the data only 1
             free(del);
             free(top);
             nStack();
         }
 
+        //file input from bottom
         if(isload){
             FILE *fp;
             fp = fopen("stack.dat", "w");
@@ -468,7 +494,7 @@ void deStack(){
 }
 
 
-// Queue
+//Create Queue
 void nQueue(){
     typeuser first;
 
@@ -479,31 +505,35 @@ void nQueue(){
     back = first;
 }
 
+
+//Add queue
 void addQueue(users add){
     typeuser NI;
     
     NI = (users*)malloc(sizeof(users));
 
-    if(isload){
+    if(isload){ //get top stack data
         NI->number = top->luckNumber;
-    }else{
+    }else{//error handling to load file at the first time
         NI->number = add.number;
     }
 
+    //data registration input
     strncpy(NI->name, add.name, 30);
     strncpy(NI->nim, add.nim, 20);
 
     NI->next = NULL;
 
 
-    if(isQueue()){
+    if(isQueue()){//if not empty
         back->next = NI;
         back=NI;
-    }else{
+    }else{ //if empty
         front = NI;
         back = NI;
     }
 
+    //file input
     if(isload){
         add.number = top->luckNumber;
         FILE *fp;
@@ -513,22 +543,23 @@ void addQueue(users add){
     }
 }
 
+//Delete front queue
 void deQueue(){
     typeuser del, helper;
     users input;
-    if(isQueue()){
+    if(isQueue()){ //if not empty
         del = front;
-        front=front->next;
+        front=front->next; //the front go into the next front data
 
         if(front!=NULL){
             free(del);
             
-        }else{
+        }else{//if the data only 1
             free(front); free(del);
             nQueue();
         }
         
-
+        //file input
         if(isload){
             FILE *fp;
             fp = fopen("queue.dat", "w");
@@ -551,10 +582,10 @@ void deQueue(){
 }
 
 
-// Print Data
+// Print Stack Data
 void printStack(){
-    if(isStack()){
-        typelotter helper;
+    if(isStack()){//if not empty
+        typelotter helper; //print from the top
         helper=top;
         puts("\n=== Lottery Number Stack ===");
         while(helper!=NULL){
@@ -566,10 +597,11 @@ void printStack(){
     }
 }
 
+//Print queue data
 void printQueue(){
-    if(isQueue()){
+    if(isQueue()){//if not empty
         int x=1;
-        typeuser helper;
+        typeuser helper;//print from the front
         helper = front;
         puts("=== Queue Data ===\n");
         printf("%-3s %-31s %-s\n","No","Name","NIM");
@@ -588,8 +620,8 @@ void regist(){
     int pay;
     char loop_regis='y';
     users input;
-    if(isStack()){
-        puts("=== REGISTRATION ==="); cin.ignore();
+    if(isStack()){ //if stack not empty
+        puts("=== REGISTRATION ==="); cin.ignore(); //input data and some error handling
         printf("Name    : "); cin.getline(input.name, 35);
 
         if(isTrue(input.name, 30)){
@@ -603,12 +635,12 @@ void regist(){
                     printf("Pay        : Rp. "); cin >> pay;
 
                     if(!invalid()){
-                        if(pay >= 100000){
+                        if(pay >= 100000){ //if the transactation complete
                             printf("Change    : Rp. %d\n", pay-100000);
                             puts("Success, please get in the queue");
                             loop_regis='n';
-                            addQueue(input);
-                            deStack();
+                            addQueue(input); //add into queue
+                            deStack(); // delete top data stack
                         }else{
                             printf("Failed! Pay Again (y/n) ? "); cin >> loop_regis;
                             fflush(stdin);
@@ -622,11 +654,12 @@ void regist(){
             puts(" --Failed!");
         }
         
-    }else{
+    }else{ //if the stack is empty
         puts("\n Sorry, our lottery is out of stock");
     }
 }
 
+//Cancel the registration
 void cancelRegistration(){
     char searchName[30], searchNim[20];
     typeuser helper, del;
@@ -638,12 +671,13 @@ void cancelRegistration(){
         puts("\n=== Menu Cancel Registration ===");
         printQueue();
 
-        puts("\nPlease input Name and Nim!"); cin.ignore();
+        puts("\nPlease input Name and Nim!"); cin.ignore(); //name and nim input
         printf("Name  : "); cin.getline(searchName, 30);
         printf("Nim   : "); cin.getline(searchNim, 20);
 
-        helper = front;
+        helper = front; // cek the data from front queue
 
+        //search the data if on the front queue
         if(strcmp(searchName, helper->name)==0 && strcmp(searchNim, helper->nim)==0){
             addStack(helper->number);
             found=true;
@@ -653,14 +687,16 @@ void cancelRegistration(){
             if(front!=NULL){
                 free(del);
             
-            }else{
+            }else{ ///if the queue data only 1
                 free(front); free(del);
                 nQueue();
             }
                 
         }
 
+        //search the data if on the middle and back of queue
         while(helper!=back&&!found){
+            //it search based on the next helper name
             if(strcmp(searchName, helper->next->name)==0 && strcmp(searchNim, helper->next->nim)==0){
                 found=true;
                 del=helper->next;
@@ -668,7 +704,7 @@ void cancelRegistration(){
                 if(del!=back){
                     helper->next=del->next;
                     free(del);
-                }else{
+                }else{ //if the data at back
                     back=helper;
                     back->next=NULL;
                     free(del);
@@ -681,12 +717,14 @@ void cancelRegistration(){
         } 
            
         
-        if(found){
+        if(found){ //if the data found
             puts("Cancel Registration Success!");
             if(isload){
                 FILE *fp;
                 fp = fopen("queue.dat", "w");
                 helper=front;
+
+                //file update the queue data
                 if(fp!=NULL){
                     while(helper!=NULL){
                         input.number = helper->number;
@@ -708,6 +746,7 @@ void cancelRegistration(){
         puts("\n No Registration Data");
     }
 }
+
 //Play Lotter
 void playLotter(){
     int guess;
@@ -723,12 +762,12 @@ void playLotter(){
         puts("-----------------------------------");
 
         printf("Hello %s\n", front->name);
-        printf("Input your luck number : "); cin >> guess;
+        printf("Input your luck number : "); cin >> guess; //the user input the number
         if(!invalid()){
-            if(guess == front->number){
+            if(guess == front->number){ //if the user input is correct so it will win the game
                 puts("Congratulation! You win the game, and get free UKT ");
                 isWin=true;
-            }else{
+            }else{  //the it wrong it will lose
                 puts("Sorry better luck next time!");
                 isWin=false;
             }
@@ -739,5 +778,4 @@ void playLotter(){
     }else{
         puts("\n  -- No Participant!");
     }
-    
 }
