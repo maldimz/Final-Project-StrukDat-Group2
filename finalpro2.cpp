@@ -181,7 +181,7 @@ int main(){
                     while(loop!='n' && loop!='N'){
                         system("cls");
                         puts("         MENU         ");
-                        puts("1. Add Loterry Stock");
+                        puts("1. Add Lottery Stock");
                         puts("2. Print Lottery Stock");
                         puts("3. Recap Data");
                         puts("4. Back To Menu");
